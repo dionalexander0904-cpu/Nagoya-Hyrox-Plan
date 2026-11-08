@@ -88,8 +88,8 @@ const TH=[
 const dsel=document.getElementById("day"),wsel=document.getElementById("wk"),out=document.getElementById("out"),cnt=document.getElementById("cnt"),spl=document.getElementById("spl"),sug=document.getElementById("sug");
 const $=id=>document.getElementById(id);
 const OFF={Monday:0,Tuesday:1,Wednesday:2,Thursday:3,Sunday:6};
-const LIFT={Monday:["Bench or DB press: 4 x 6-8","Weighted pull-up or lat pulldown: 4 x 6-8","Standing overhead press: 3 x 8","Single-arm row: 3 x 10 each side","Heavy seated cable row: 3 x 10","Farmers carry: 3 x 40m, heavy","Wall balls: 4 x 15 @ 9kg, unbroken sets","Pallof press: 3 x 10 each side"],
-Wednesday:["Squat variation: 3 x 6 @ RPE 7-8","RDL: 3 x 8","Split squat or step-up: 3 x 8 each leg","Hip thrust: 3 x 10","Leg curl: 2 x 12","Calf raise: 3 x 12","Dead bugs: 3 x 10"]};
+const LIFT={Monday:["Bench or DB press: 4 x 6-8, rest 2 min","Weighted pull-up or lat pulldown: 4 x 6-8, rest 2 min","Standing overhead press: 3 x 8, rest 90 sec","Single-arm row: 3 x 10 each side, rest 60 sec","Chest-supported DB row (incline bench): 3 x 10, rest 90 sec","Farmers carry: 3 x 40m, heavy, rest 90 sec","Wall balls: 4 x 15 @ 9kg, unbroken sets, rest 90 sec","Pallof press: 3 x 10 each side, rest 45 sec"],
+Wednesday:["Squat variation: 3 x 6 @ RPE 7-8, rest 2-3 min","RDL: 3 x 8, rest 2 min","Split squat or step-up: 3 x 8 each leg, rest 90 sec","Single-leg glute bridge, foot on bench: 3 x 10 each leg, rest 60 sec","Leg curl: 2 x 12, rest 60 sec","Calf raise: 3 x 12, rest 45-60 sec","Dead bugs: 3 x 10, rest 45 sec"]};
 const SUN=["12-14","12-14","12-14","10","12-14","12-14","12-14","10","14","15","15","10","15","16","16","10","15","16, last 2-3km moderate","16","10","16, last 2-3km moderate","15","14, last 2-3km moderate","12","8",""];
 const fmt=d=>d.getDate()+" "+MON[d.getMonth()].slice(0,3);
 const phase=n=>PH.find(p=>n>=p[1]&&n<=p[2])[0];
