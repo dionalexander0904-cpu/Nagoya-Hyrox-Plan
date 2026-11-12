@@ -42,7 +42,7 @@ td:nth-child(3),td:nth-child(5){white-space:normal}
 <h1>Nagoya doubles plan</h1>
 <p class="sub">Pro Doubles, Nagoya 16-18 April 2027. Week 1 starts Monday 19 October 2026.</p>
 <div class="pick">
-<div><label for="day">Day</label><select id="day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Sunday</option></select></div>
+<div><label for="day">Day</label><select id="day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Sunday</option></select></div>
 <div><label for="wk">Week</label><select id="wk"></select></div>
 </div>
 <section id="out" class="card" aria-live="polite"></section>
@@ -87,9 +87,10 @@ const TH=[
 {n:3,t:"Technique deload",r:null,s:["3 rounds:","800m run, moderate effort","15 wall balls, 15m lunges, 10m burpee broad jumps","About 35 min total"]}];
 const dsel=document.getElementById("day"),wsel=document.getElementById("wk"),out=document.getElementById("out"),cnt=document.getElementById("cnt"),spl=document.getElementById("spl"),sug=document.getElementById("sug");
 const $=id=>document.getElementById(id);
-const OFF={Monday:0,Tuesday:1,Wednesday:2,Thursday:3,Sunday:6};
+const OFF={Monday:0,Tuesday:1,Wednesday:2,Thursday:3,Friday:4,Sunday:6};
 const LIFT={Monday:["Bench or DB press: 4 x 6-8, rest 2 min","Weighted pull-up or lat pulldown: 4 x 6-8, rest 2 min","Standing overhead press: 3 x 8, rest 90 sec","Single-arm row: 3 x 10 each side, rest 60 sec","Chest-supported DB row (incline bench): 3 x 10, rest 90 sec","Farmers carry: 3 x 40m, heavy, rest 90 sec","Wall balls: 4 x 15 @ 9kg, unbroken sets, rest 90 sec","Pallof press: 3 x 10 each side, rest 45 sec"],
-Wednesday:["Squat variation: 3 x 6 @ RPE 7-8, rest 2-3 min","RDL: 3 x 8, rest 2 min","Split squat or step-up: 3 x 8 each leg, rest 90 sec","Single-leg glute bridge, foot on bench: 3 x 10 each leg, rest 60 sec","Leg curl: 2 x 12, rest 60 sec","Calf raise: 3 x 12, rest 45-60 sec","Dead bugs: 3 x 10, rest 45 sec"]};
+Wednesday:["Squat variation: 3 x 6 @ RPE 7-8, rest 2-3 min","RDL: 3 x 8, rest 2 min","Split squat or step-up: 3 x 8 each leg, rest 90 sec","Single-leg glute bridge, foot on bench: 3 x 10 each leg, rest 60 sec","Leg curl: 2 x 12, rest 60 sec","Calf raise: 3 x 12, rest 45-60 sec","Dead bugs: 3 x 10, rest 45 sec"],
+Friday:["Ski Erg or Row intervals: 5 x 3 min","Wall balls: 4 x 15 @ 9kg","Sled pull: 20m, moderate load"]};
 const SUN=["12-14","12-14","12-14","10","12-14","12-14","12-14","10","14","15","15","10","15","16","16","10","15","16, last 2-3km moderate","16","10","16, last 2-3km moderate","15","14, last 2-3km moderate","12","8",""];
 const fmt=d=>d.getDate()+" "+MON[d.getMonth()].slice(0,3);
 const phase=n=>PH.find(p=>n>=p[1]&&n<=p[2])[0];
@@ -102,7 +103,7 @@ function sec(s){const m=String(s).trim().match(/^(\d+):(\d{2})$/);return m?+m[1]
 function mmss(x){return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")}
 function boxes(){const day=dsel.value;let L;
  if(day=="Sunday")L=[["Distance (km)","14"],["Average pace (min:sec per km)","6:20"],["Average heart rate (optional)","135"]];
- else if(LIFT[day])L=LIFT[day].map(x=>[x.split(":")[0],"60kg 4x8"]);
+ else if(LIFT[day])L=LIFT[day].map((x,i)=>[x.split(":")[0],({Friday:["5x3min @ 2:05/500m","4x15 @ 9kg","20m @ 60kg"]}[day]||[])[i]||"60kg 4x8"]);
  else{const c=Math.max(1,Math.min(12,+cnt.value||1));L=[];for(let i=1;i<=c;i++)L.push(["Run "+i,"4:31"])}
  spl.innerHTML="";L.forEach((x,i)=>{const d=document.createElement("div");d.innerHTML='<label for="s'+i+'">'+x[0]+'</label><input class="sp" id="s'+i+'" placeholder="'+x[1]+'">';spl.appendChild(d)})}
 function plan(){const{n,day}=cur();const run=day=="Tuesday"||day=="Thursday";const w=wk();const del=DEL.includes(n)?'<span class="tag d">Deload week</span>':"";
@@ -113,6 +114,7 @@ function plan(){const{n,day}=cur();const run=day=="Tuesday"||day=="Thursday";con
   h+=day=="Tuesday"?li(["15 min easy warm-up with 4 x 15 sec relaxed strides"].concat(w.s,["10 min easy cool-down"])):li(["10 min warm-up"].concat(w.s,["Cool-down"]));h+=care}
  else if(run){const i=n<=8?0:n<=16?1:n<=23?2:n<=25?3:4;h+="<p>"+OUT[day=="Tuesday"?1:2][i]+"</p><p class=\"note\">Full session detail for this week is not built yet. Log your sessions and this week will be set from your results.</p>"}
  else if(day=="Sunday"){h+=n==26?"<p>Race week: no long run. A short easy shake-out is fine if you want one.</p>":'<div class="target">'+SUN[n-1]+" km easy</div>"+li(["Zone 2, by effort or heart rate, not pace","You should be able to speak in full sentences","Hills are fine: let the pace drop on the climbs"])}
+ else if(day=="Friday"){h+='<div class="target">Engine + wall balls</div>'+li(["Warm-up: 8-10 min easy bike or row, hip flexor stretches, gentle hamstring floss","Aerobic intervals: 5 x 3 min on Ski Erg or Row (alternate) @ RPE 7-8, 90 sec easy bike or walk between","Wall ball circuit: 4 rounds of 15 wall balls @ 9kg, unbroken, then 20m sled pull at a moderate load, 60 sec between rounds, RPE 7","Core: dead bugs x 10, side plank 30 sec each side, Pallof press x 10 each side","Cool-down: 5 min easy mobility"])+'<p class="note">'+(DEL.includes(n)?"Deload week: 4 x 3 min at RPE 6-7, 2 rounds of wall balls and 1 round of core.":"Progression: extend the intervals to 3.5 then 4 min and add wall ball reps from 15 to 20, keeping effort at RPE 8 or below.")+" If Thursday leaves your legs flat, cut the wall ball circuit to 2 rounds.</p>"+care}
  else{h+='<div class="target">'+(day=="Monday"?"Upper body":"Lower body")+"</div>"+li(LIFT[day])+'<p class="note">'+(DEL.includes(n)?"Deload week: drop one set from each lift and cut the load about 10%.":n>=17?"Race-specific phase: trim to maintenance volume (drop a set from each lift).":"Add 2.5-5% to a lift once every set is done at RPE 7 or below.")+(day=="Wednesday"?" Keep it moderate so Thursday stays fresh. No finisher and no Nordics.":" Stop each set 1-2 reps short of failure.")+"</p>"+care}
  out.innerHTML=h;sug.textContent="";
  $("cwrap").style.display=run?"":"none";$("twrap").style.display=$("swrap").style.display=day=="Thursday"?"":"none";
@@ -126,7 +128,7 @@ $("save").onclick=()=>{const{n,day}=cur();const e=+$("rpe").value;const P=[...sp
  if(day=="Sunday"){const km=parseFloat(P[0][1]),s=sec(P[1][1]);if(!km||s===null||!e){sug.textContent="Enter the distance, the pace as min:sec and an effort from 1 to 10.";return}
   res=km+"km @ "+P[1][1]+"/km"+(P[2][1]?" | HR "+P[2][1]:"");m=e>=7?"That was hard for an easy run: slow down next Sunday.":"Good, that’s the right effort for a Sunday run."}
  else if(LIFT[day]){const f=P.filter(x=>x[1]);if(!f.length||!e){sug.textContent="Enter at least one lift (for example 60kg 4x8) and an effort from 1 to 10.";return}
-  res=f.map(x=>x[0]+" "+x[1]).join("; ");m=e<=7?"If every set felt controlled, add 2.5-5% to the main lifts next time.":"Hold the loads next time."}
+  res=f.map(x=>x[0]+" "+x[1]).join("; ");m=day=="Friday"?(e<=7?"Good: extend the intervals or add wall ball reps when it feels easy.":"Hold the same volume next time."):e<=7?"If every set felt controlled, add 2.5-5% to the main lifts next time.":"Hold the loads next time."}
  else{const raw=P.map(x=>x[1]).filter(Boolean),v=raw.map(sec);if(!raw.length||v.includes(null)||!e){sug.textContent="Enter each pace as min:sec (for example 4:31) and an effort from 1 to 10.";return}
   const avg=Math.round(v.reduce((a,b)=>a+b,0)/v.length),fade=v.length>1?v[v.length-1]-v[0]:0,fs=(fade>0?"+":"")+fade;
   res=raw.join(", ")+" | avg "+mmss(avg)+" | fade "+fs+"s"+($("tot").value?" | total "+$("tot").value:"")+($("st").value?" | stations "+$("st").value:"");
